@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Kehitys_dokumentaatio.md</title>
+<title>Kehitys_dokumentaatio_v2.md</title>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 
 <style>
@@ -366,27 +366,29 @@ code {
     });
   </script>
 <h2 id="mms-report-parser--ohjelman-kehitysprosessi">MMS Report Parser -ohjelman kehitysprosessi</h2>
-<p>Tämä dokumentaatio kuvaa MMS Report Parser -ohjelman kehitysprosessin vaihe vaiheelta. Ohjelman tarkoitus on lukea Movie Magic Scheduling -ohjelmasta tuotettuja PDF-raportteja, jäsentää niiden sisältö ja tallentaa tiedot Excel-taulukkoon. Toteutin ohjelman Pythonilla ja käytin apuna ChatGPT:tä koodin generointiin ja iterointiin. Tässä dokumentaatiossa käydään läpi käytetyt työkalut sekä kaikki vaiheet ohjelman rakentamisesta, virtuaaliympäristön luomisesta ja PDF-datan käsittelystä aina Excel-muotoiluun ja lopulliseen testaamiseen saakka. Jos haluat rakentaa samantyyppisen työkalun tai kehittää tätä eteenpäin, tästä dokumentaatiosta voi olla hyötyä!</p>
+<p>Tämä dokumentaatio kuvaa MMS Report Parser -ohjelman kehitysprosessin vaihe vaiheelta. Ohjelman tarkoitus on lukea Movie Magic Scheduling -ohjelmasta tuotettuja PDF-raportteja, jäsentää niiden sisältö ja tallentaa tiedot Excel-taulukkoon.</p>
+<p>PDF-raportit sisältävät tietoa käsikirjoituksen jokaisesta kohtauksesta. Jokainen kohtaus on erillisellä sivulla ja niissä kerrotaan mm. kohtausnumero, kuvauspäivämäärä, kohtauksen lyhyt kuvaus, kohtauksessa esiintyvät hahmot, avustajat, ajoneuvot jne. MMS Report Parser -ohjelma lukee raportin kaikki sivut ja tekee niistä Excel-taulukon jossa jokaiselle raportissa kerrotulle sivulle on oma rivi ja jokaiselle asialle oma sarake.</p>
+<p>Toteutin ohjelman Pythonilla ja käytin apuna ChatGPT:tä koodin generointiin ja iterointiin. Tässä dokumentaatiossa käydään läpi käytetyt työkalut sekä kaikki vaiheet ohjelman rakentamisesta, virtuaaliympäristön luomisesta ja PDF-datan käsittelystä aina Excel-muotoiluun ja lopulliseen testaamiseen saakka. Jos haluat rakentaa samantyyppisen työkalun tai kehittää tätä eteenpäin, tästä dokumentaatiosta voi olla hyötyä!</p>
+<p>Sivuston lopusta läydät linkin alkuperäiseen keskuteluun GPT:n kanssa, Movie Magic Scheduling -tiedoston käsikirjoituksen purusta, PDF-raportin, raportin layout-tiedoston, Excel-taulukon PDF-raportista ja itse ohjelman jonka toimivuutta voit testata antamani PDF-raportin avulla.</p>
 <p><strong>1. Ohjelmointikieli</strong></p>
-<p>Ohjelma on kirjoitettu Python-ohjelmointikielellä. Käytin versiota 3.12. Uusin versio on 3.13, mutta siinä ilmeni ongelmia graafisen käyttöliittymän (Graphical User Interface, GUI) toiminnassa tiedostojen valintaa varten. Versiossa 3.12 tätä ongelmaa ei ollut.</p>
+<p>Ohjelma on kirjoitettu Python-ohjelmointikielellä. Käytin versiota 3.12. Uusimmassa 3.13 versiossa minulla ilmeni ongelmia graafisen käyttöliittymän (Graphical User Interface, GUI) toiminnassa.</p>
 <p>Pythonin voi ladata viralliselta sivustolta: <a href="url">https://www.python.org/downloads/release/python-3128/</a></p>
-<p>ChatGPT:ltä voi myös pyytää ohjeita Pythonin asentamiseen esimerkiksi komentorivin kautta.</p>
 <p><strong>2. Koodin tekstieditori</strong></p>
 <p>Koodin kirjoittamiseen käytän Visual Studio Code -tekstieditoria.</p>
 <p>Editorin voi ladata viralliselta sivustolta:
 <a href="url">https://code.visualstudio.com</a></p>
 <p>Uutta koodia voi aloittaa valitsemalla: <strong>File → New File → New File… “Python File Python”</strong></p>
-<p><strong>3. Terminaali (komentoriviohjelma)</strong></p>
-<p>Ohjelman rakentamiseen ja käyttämiseen käytän macOS:n Terminaali-ohjelmaa. Terminal on komentorivipohjainen työkalu, jonka avulla hallitaan tietokonetta tekstikomennoilla graafisen käyttöliittymän sijaan.</p>
+<p><strong>3. Terminal-ohjelma (komentoriviohjelma)</strong></p>
+<p>Ohjelman rakentamiseen ja käyttämiseen käytän macOS:n Terminal-ohjelmaa. Terminal on komentorivipohjainen työkalu, jonka avulla hallitaan tietokonetta tekstikomennoilla graafisen käyttöliittymän sijaan.</p>
 <p>Terminal ohjelma löytyy kansiosta:</p>
 <p><strong>Applications → Utilities → Terminal</strong></p>
 <p><strong>4. Luo projektille hakemisto</strong></p>
 <p>Valitse haluamasi sijainti (esim. Documents) ja luo uusi kansio nimeltään esimerkiksi mms_report_parser.</p>
-<p>Avaa komentorivi ja siirry kansioon kirjoittamalla komentoriville:</p>
+<p>Avaa komentorivi ja siirry kansioon kirjoittamalla komentoriville komento:</p>
 <pre class="hljs"><code><div>cd ~/Documents/mms_report_parser
 </div></code></pre>
 <p><em>Vaihtoehtoisesti:</em>
-Ota Finderissä käyttöön <strong>View → Show Path Bar</strong>. Klikkaa kansion kuvaketta alareunassa oikealla hiiren napilla ja valitse <strong>“Open in Terminal”</strong>.</p>
+Ota Finderissä käyttöön <strong>View → Show Path Bar</strong>. Klikkaa ikkunan alareunassa olevaaa mms_report_parser -kansion kuvaketta hiiren oikealla napilla ja valitse <strong>“Open in Terminal”</strong>.</p>
 <p><strong>5. Virtuaaliympäristön luominen</strong></p>
 <p>Ohjelmia kannattaa rakentaa omassa virtuaaliympäristössään, jotta järjestelmän Python-asennus ja sen paketit eivät muutu ja mahdolliset konfliktit vältetään.</p>
 <p>Virtuaali ympäristö luodaan syöttämällä komentoriville komento:</p>
@@ -402,9 +404,9 @@ Ota Finderissä käyttöön <strong>View → Show Path Bar</strong>. Klikkaa kan
 </div></code></pre>
 <p><strong>6. ChatGPT:n käyttö ohjelman rakentamisessa</strong></p>
 <p>Käytin ohjelman kehityksessä ChatGPT:n eri versioita (alun perin 01-mini, nykyään 03-mini tai 03-mini-high).</p>
-<p>Yleensä aloitan lyhyillä ohjelman kuvausprompteilla, mutta lopulta yksi pitkä prompti toimi parhaiten, kun tavoitteet olivat tarkasti tiedossa.</p>
-<p>Käytin apuna myös ChatGPT-4o:ta promptien muotoilussa.</p>
-<p><strong>Prompti:</strong></p>
+<p>Yleensä aloitan lyhyillä ohjelman kuvausprompteilla, mutta lopulta yksi pitkä prompti toimi tässä tapauksessa parhaiten koska tavoitteet olivat tarkasti tiedossa.</p>
+<p>Käytin apuna ChatGPT-4o:ta promptien muotoilussa.</p>
+<p><strong>Ensimmäinen prompti:</strong></p>
 <pre class="hljs"><code><div>Hi! Can you give a python code that reads a pdf pages and then parses in to an excel.
 
 The pdf has data with headers. Each header has own line. For example:
@@ -454,14 +456,16 @@ Format the sheet in the following way:
 Think it over first. Use simple modular structure. No code needed yet. I am using macOS. Thank you!
 </div></code></pre>
 <p><strong>Huomioita promptista:</strong></p>
-<p><em>There should be GUI...</em>, eli tähän olisi kannattunut sanoa, että tekee GUI:n Tkinter-kirjastolla, sillä se kirjasto minkä GPT valitsi oli muuttunut maksulliseksi.</p>
-<p><em>Kohta 4.</em>, eli sivunumeroiden formatointi ei onnistunut ohjelman ensimmäisessä versiossa.</p>
-<p><em>Kohta 6.</em>, eli SHEET # sarakkeiden tuomisessa excelliin mukaan tuli ylimääräinen &quot; : &quot; merkki</p>
-<p><em>Kohta 7.</em>, eli logi josta näkee, jos ohjelma ei toimi oikein, että missä on menty vikaan.</p>
-<p><em>Think it over first...</em>, Pyydän aina GPTllä ajattelemaan asian ennen kuin antaa koodia, sillä muuten siltä saattaa tulla paljon koodia, mitä se saattaa muuttaa kesken vastauksen, ja tällöin on vaikea pysyä perässä mikä on lopullinen toimiva koodi. Modulaari rakennetta pyydän sen takia, että jos koodista tulee yksi pitkä tiedosto niin GPT ei välttämättä enää suostu sitä kokonaisuudessaan uudelleen kirjoittamaan. Muutenkin on tehokkaampaa tehdä muutoksia ja lisäyksiä moduuli kerrallaan.</p>
+<p><em>There should be GUI...</em>, tähän olisi kannattunut kirjoittaa, että tekee GUI:n Tkinter-kirjastolla, sillä se kirjasto minkä GPT valitsi oli muuttunut maksulliseksi.</p>
+<p><em>Kohta 4.</em>, sivunumeroiden formatointi ei onnistunut ohjelman ensimmäisessä versiossa.</p>
+<p><em>Kohta 6.</em>, eli SHEET #-sarakkeiden tuomisessa excelliin mukaan tuli ylimääräinen &quot; : &quot; merkki</p>
+<p><em>Kohta 7.</em>, logi on tiedosto josta näkee sen missä on menty vikaan jos ohjelma ei toimi oikein.</p>
+<p><em>Think it over first...</em>, pyydän aina GPTllä ajattelemaan asian ennen kuin antaa koodia, sillä muuten siltä saattaa tulla paljon koodia, mitä se saattaa muuttaa kesken vastauksen, ja tällöin on vaikea pysyä perässä mikä on lopullinen toimiva koodi. Modulaari rakennetta pyydän sen takia, että jos koodista tulee yksi pitkä tiedosto niin GPT ei välttämättä enää suostu sitä kokonaisuudessaan uudelleen kirjoittamaan. Muutenkin on tehokkaampaa tehdä muutoksia ja lisäyksiä moduuli kerrallaan.</p>
 <p><strong>Toinen prompti</strong></p>
-<p>Selasin vastauksen nopeasti läpi enkä huomannyt mitään erityistä kommentoitavaa, vaikka tässä
-vaiheessa olisi pitänyt huomata että GUIta varten GPT harkitsee muuta kirjastoa kuin Tkinteriä.</p>
+<ol>
+<li>Selasin vastauksen nopeasti läpi enkä huomannut mitään erityistä kommentoitavaa, vaikka tässä
+vaiheessa olisi pitänyt huomata, että GUIta varten GPT harkitsee muuta kirjastoa kuin Tkinteriä.</li>
+</ol>
 <pre class="hljs"><code><div>Thank you! I am using Python 3.12 and I will make a virtual environment using that version. I will make a github setup later. Do not give me README file or .gitignore yet.
 
 Please give me terminal commands for creating nessecary files (requirements.txt etc.) and folders. The name of the project is mms_report_parser.
@@ -469,10 +473,10 @@ Please give me terminal commands for creating nessecary files (requirements.txt 
 Please think it over first and give me the neccesary code in the end. Avoid over-splitting the code into too many tiny modules but also avoid writing overly long code. Maintain readability and simplicity over unnecessary complexity. Thank you! 
 </div></code></pre>
 <p><strong>Huomioita promptista:</strong></p>
-<p><em>Do not give me README...</em>, GPT tarjotaa automaattisesti aina versionhallintaa ja siihen githubbia. Tässä halusin että hän ei kirjoittele siihen liittyviä asioita sillä en niitä vielä tarvitse.</p>
-<p><em>Please give me terminal...</em>, Terminaaliissa voi helposti ja nopeasti luoda kaikki tarvittavat kansiot ja .txt ja .py tiedostot valmiiksi. Tiedostot ovat tyhjiä, mutta ne on nimetty oikein ja niitä klikkaamalla pääsee niihin kirjoittamaan tai tässä tapauksessa liittämään GPT:ltä kopioidun koodin.</p>
-<p><em>Please think it over first...</em>, Tässäkin pyydän ensin miettimään ja sitten antamaan lopuksi kaikki tarvittava koodi. Näin on helppo kopioida ja liittää käskyt ja koodit terminaaliin sekä .py tiedostoihin.</p>
-<p>En laita tähän vastausta sillä se on pitkä, mutta se löytyy täältä. LINK.</p>
+<p><em>Do not give me README...</em>, GPT tarjoaa usein versionhallintaa.Tässä halusin, että  ei kirjoittele siihen liittyviä asioita, koska en niitä vielä tarvitse.</p>
+<p><em>Please give me terminal...</em>, Terminal-ohjelmassa voi helposti ja nopeasti luoda kaikki tarvittavat kansiot sekä .txt ja .py tiedostot valmiiksi. Tiedostot ovat tyhjiä, mutta ne on nimetty oikein. Sitten ei tarvitse muuta kuin avata ne ja liittää niihin GPT:ltä kopioitu koodi.</p>
+<p><em>Please think it over first...</em>, Tässäkin pyydän ensin miettimään ennen koodin kirjoittamista. Kun koodi annetaan lopuksi se on helppo löytää, kopioida ja liitää oikeisiin tiedostoihin.</p>
+<p>En laita tähän vastausta sillä se on pitkä. Linkki koko keskusteluun löytyy sivuston lopusta.</p>
 <p><strong>7. Projektin kansiorakenne ja tiedostot</strong></p>
 <p>Vastauksessa GPT ehdotti seuraavaa kansiorakennetta:</p>
 <pre class="hljs"><code><div>mms_report_parser/
@@ -488,7 +492,7 @@ Please think it over first and give me the neccesary code in the end. Avoid over
 └── logs/
     └── app.log              <span class="hljs-comment"># Lokitiedosto</span>
 </div></code></pre>
-<p><strong>8. Projektin alustaminen ja tiedostojen luonti terminaalissa</strong></p>
+<p><strong>8. Projektin alustaminen ja tiedostojen luonti Terminal-ohjelmassa</strong></p>
 <p>Kun olet navigoinut projektikansioon ja aktivoinut virtuaaliympäristön, luo tarvittavat tiedostot ja kansiot seuraamalla seuraavia ohjeita.</p>
 <p>Luo requirements.txt-tiedosto:</p>
 <pre class="hljs"><code><div>touch requirements.txt
@@ -497,6 +501,8 @@ Please think it over first and give me the neccesary code in the end. Avoid over
 <pre class="hljs"><code><div>Pdfplumber
 Openpyxl
 </div></code></pre>
+<p><strong>Mitä kirjastot ovat?</strong></p>
+<p>Ohjelmointikirjastot (engl. libraries) ovat kokoelmia valmiiksi kirjoitettua koodia, joka tarjoaa tiettyjä toiminnallisuuksia. Pythonissa kirjastot asennetaan tyypillisesti pip-komennolla, ja ne helpottavat sovelluksen rakentamista, koska samoja toimintoja ei tarvitse toteuttaa itse alusta alkaen. Esimerkiksi pdfplumber-kirjasto sisältää valmiit työkalut PDF-tiedostojen lukemiseen ja openpyxl Excel-tiedostojen käsittelyyn.</p>
 <p>Asenna kirjastot antamalla komentoriville seuraava käsky. Tarkista että olet virtuaaliympäristössä ennen käskyä:</p>
 <pre class="hljs"><code><div>pip install -r requirements.txt
 </div></code></pre>
@@ -542,7 +548,7 @@ touch logs/app.log
 </div></code></pre>
 <p>Avasin <em>pdf_parser.py</em> tiedoston Visual Studio Code -ohjelmalla, liitin koodin sinne ja tallensin tiedoston.</p>
 <p><strong>Ohjelman ajaminen:</strong></p>
-<p>Kun kaikki koodi on siirretty tiedostostoihin on tallennettu, testasin ohjelmaa ajamalla seuraavan käskyn terminaalissa:</p>
+<p>Kun kaikki koodi on siirretty tiedostostoihin on tallennettu, testasin ohjelmaa ajamalla seuraavan käskyn Terminal-ohjelmassa:</p>
 <pre class="hljs"><code><div>python main.py
 </div></code></pre>
 <p><strong>10. Muutoksia koodiin</strong></p>
@@ -563,8 +569,25 @@ cell.number_format = '# ?/?' --&gt; cell.number_format = '# ?/8'
 <p>Toinen prompti koski SHEET #-sarakkeen ongelmaa, jossa erotin merkin &quot; : &quot; siirtyi sarakkeeseen sheet-numeron mukana tiedostoon.</p>
 <pre class="hljs"><code><div>Great! Thank you! I made the change. Please remember that. There is a slight issue with the SHEET #. When it is parsed it takes with it the separator &quot;:&quot;. For instance SHEET #: 8 is written as &quot;: 8&quot; in excel, when the correct would be &quot;8&quot;. Could we fix that also. Think about it first. No code needed yt.
 </div></code></pre>
-<p>Promptissa pyysin että muistaa aikaisemmin tehdyn muutoksen koodissa, sillä jos GPT kirjoittelee koodia uudelleen, niin ei palaa vanhaan versioon missä kahdeksasosat eivät toimi.</p>
-<p>GPT:n vastauksessa sain heti korjatun koodin, vaikka sanoin että en tarvitse vielä koodia. Annettu koodi oli kuitenkin hyvä ja data siirtyi oikein exceliin. Ohjelma oli näiltä osin nyt valmis.</p>
+<p>Promptissa pyysin että muistamaan aikaisemmin tehdyn muutoksen koodissa, sillä jos GPT kirjoittelee koodia uudelleen, niin ei palaa vanhaan versioon missä kahdeksasosat eivät toimi.</p>
+<p>GPT:n vastauksessa sain heti korjatun koodin, vaikka sanoin että en tarvitse vielä koodia. Annettu koodi oli kuitenkin hyvä ja data siirtyi Excel-tiedostoon oikein.</p>
+<p>Lopuksi pyysin lisäämään ominaisuuden, jossa käyttäjä voi valita, mihin ja millä nimellä Excel-tiedosto tallennetaan.</p>
+<pre class="hljs"><code><div>Thank you! Can we add a feature where we can determine where we save the excel file and how to name it? Think it over first. No code needed yet.
+</div></code></pre>
+<p>GPT:n vastauksen jälkeen promptasin.</p>
+<pre class="hljs"><code><div>Yes, we can do this. Let’s keep the modular structure. Do not add or change anything else. Think it over first and then give me the complete code for all the .py files that needs to be changed. Thank you!
+</div></code></pre>
+<p>GPT:n kirjoittama koodi toimi ja ohjelma oli näiltä osin nyt valmis.</p>
+<p><strong>Linkit ja vastuuvapauslauseke:</strong></p>
+<p>Tämä dokumentaatio ja esimerkkikoodi on jaettu “sellaisena kuin se on”, ilman minkäänlaisia takuita. En vastaa mahdollisista virheistä tai niiden aiheuttamista ongelmista, joita koodin käyttö tai muokkaaminen voi aiheuttaa. Koodin käyttäjä vastaa itse sovelluksen toiminnasta ja mahdollisista muutoksista.</p>
+<ul>
+<li><a href="https://chatgpt.com/share/67b1b90f-b244-800f-a1ef-330f1df8d384">Alkuperäinen ChatGPT keskustelu</a></li>
+<li><a href="https://joonaskaup.github.io/mms_report_parser/The_Ancient.msd">Movie Magic Scheduling -tiedosto</a></li>
+<li><a href="https://joonaskaup.github.io/mms_report_parser/The_Ancient_mms_parser_layout_v2_report.pdf">PDF-raportti</a></li>
+<li><a href="https://joonaskaup.github.io/mms_report_parser/Report_parser_layout_v2.msr">Report layout</a></li>
+<li><a href="https://joonaskaup.github.io/mms_report_parser/MMS_Report.xlsx">Excel-tiedosto</a></li>
+<li><a href="https://www.myqnapcloud.com/smartshare/681j44ilnp2m26103694172a_6clRtX5">MMS Report parser -ohjelma</a> (ohjelman pitäisi toimia tuplaklikkamalla tiedostoa. Se pyytää valitsemaan pdf-tiedoston, purkaa sen Excel-muotoon, pyytäää nimeämään sen ja kertomaan minne se tallennetaan.</li>
+</ul>
 
 </body>
 </html>
