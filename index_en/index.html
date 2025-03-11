@@ -1,68 +1,512 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>MMS Report Parser - Development Process</title>
-<meta charset="UTF-8">
+<title>Kehitys_dokumentaatio_v2.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
 </head>
 <body>
-<h2>MMS Report Parser - Software Development Process</h2>
-<p>This documentation outlines the step-by-step development process of the MMS Report Parser software. The program is designed to read PDF reports generated from the Movie Magic Scheduling software, parse their content, and save the data into an Excel spreadsheet.</p>
-
-<p>PDF reports contain information about each scene in the script. Each scene is presented on a separate page and includes details such as the scene number, filming date, brief scene description, characters present, extras, vehicles, etc. The MMS Report Parser reads all the pages of the report and generates an Excel table where each page is a row, and each detail is in its own column.</p>
-
-<p>The program was built using Python, with the help of ChatGPT for code generation and iteration. This documentation covers the tools used and the complete process from setting up the virtual environment and handling PDF data to formatting the final Excel file and testing the program. If you wish to build a similar tool or further develop this one, this documentation can be helpful.</p>
-
-<h3>1. Programming Language</h3>
-<p>The program is written in Python, specifically version 3.12. The newer 3.13 version had GUI-related issues.</p>
-<p>Python download link: <a href="https://www.python.org/downloads/release/python-3128/">Download Python 3.12</a></p>
-
-<h3>2. Code Editor</h3>
-<p>I used Visual Studio Code for coding. Download it here: <a href="https://code.visualstudio.com">Download VS Code</a></p>
-
-<h3>3. Terminal Application (Command Line Tool)</h3>
-<p>For building and running the program, I used the Terminal application on macOS. The Terminal app is located at:</p>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h2 id="mms-report-parser--ohjelman-kehitysprosessi">MMS Report Parser - Program Development Process</h2>
+<p>This documentation describes the development process of the MMS Report Parser program step by step. The purpose of the program is to read PDF reports produced by the Movie Magic Scheduling program, parse their content, and save the data into an Excel spreadsheet.</p>
+<p>The PDF reports contain information about each scene of the screenplay. Each scene is on a separate page and includes, among other things, the scene number, shooting date, a brief description of the scene, the characters appearing in the scene, assistants, vehicles, etc. The MMS Report Parser program reads all the pages of the report and creates an Excel spreadsheet where each page described in the report has its own row and each item its own column.</p>
+<p>I implemented the program in Python and used ChatGPT to assist with code generation and iteration. This documentation goes through the tools used as well as all the steps from building the program, creating the virtual environment, and processing the PDF data to Excel formatting and final testing. If you want to build a similar tool or further develop this one, this documentation might be helpful!</p>
+<p>At the bottom of the site, you will find a link to the original conversation with GPT, the screenplay extraction of the Movie Magic Scheduling file, the PDF report, the report layout file, the Excel spreadsheet generated from the PDF report, and the program itself, which you can test using the provided PDF report.</p>
+<p><strong>1. Programming Language</strong></p>
+<p>The program is written in the Python programming language. I used version 3.12. In the latest version 3.13, I encountered issues with the graphical user interface (GUI).</p>
+<p>Python can be downloaded from the official website: <a href="url">https://www.python.org/downloads/release/python-3128/</a></p>
+<p><strong>2. Code Text Editor</strong></p>
+<p>I use the Visual Studio Code text editor for writing code.</p>
+<p>The editor can be downloaded from the official website:
+<a href="url">https://code.visualstudio.com</a></p>
+<p>You can start new code by selecting: <strong>File → New File → New File… “Python File Python”</strong></p>
+<p><strong>3. Terminal Program (Command Line Interface)</strong></p>
+<p>I use macOS's Terminal program for building and running the program. Terminal is a command line-based tool that allows you to control the computer using text commands instead of a graphical interface.</p>
+<p>The Terminal program can be found in the folder:</p>
 <p><strong>Applications → Utilities → Terminal</strong></p>
+<p><strong>4. Create a Directory for the Project</strong></p>
+<p>Choose your desired location (e.g. Documents) and create a new folder named, for example, mms_report_parser.</p>
+<p>Open the command line and navigate to the folder by typing the following command:</p>
+<pre class="hljs"><code><div>cd ~/Documents/mms_report_parser
+</div></code></pre>
+<p><em>Alternatively:</em>
+Enable <strong>View → Show Path Bar</strong> in Finder. Right-click the mms_report_parser folder icon at the bottom of the window and select <strong>"Open in Terminal"</strong>.</p>
+<p><strong>5. Creating a Virtual Environment</strong></p>
+<p>It is advisable to build programs in your own virtual environment so that the system Python installation and its packages remain unchanged and potential conflicts are avoided.</p>
+<p>A virtual environment is created by entering the following command in the terminal:</p>
+<pre class="hljs"><code><div>python3 -m venv venv
+</div></code></pre>
+<p><em>(Note: the latter "venv" is the name of the environment; I always use this name because it facilitates repeated use.)</em></p>
+<p>The environment is activated with the command:</p>
+<pre class="hljs"><code><div>source venv/bin/activate
+</div></code></pre>
+<p>The environment name now appears at the beginning of the command line, e.g. (venv).</p>
+<p>To exit the virtual environment if needed, use the command:</p>
+<pre class="hljs"><code><div>deactivate
+</div></code></pre>
+<p><strong>6. Using ChatGPT in Building the Program</strong></p>
+<p>I used various versions of ChatGPT during the program's development (originally 01-mini, now 03-mini or 03-mini-high).</p>
+<p>Usually, I start with short program description prompts, but eventually one long prompt worked best in this case because the objectives were clearly defined.</p>
+<p>I used ChatGPT-4o to assist with formatting the prompts.</p>
+<p><strong>First prompt:</strong></p>
+<pre class="hljs"><code><div>Hi! Can you give a python code that reads a pdf pages and then parses in to an excel.
 
-<h3>4. Creating a Project Directory</h3>
-<p>Navigate to your desired location and run the command:</p>
-<pre><code>cd ~/Documents/mms_report_parser</code></pre>
+The pdf has data with headers. Each header has own line. For example:
+SCENE #: 103
+I/E: INT
+CAST: 1.JANE SMITH, 2.JOHN SMITH 3. MR.WHITE, 4. MRS.WHITE
 
-<h3>5. Creating a Virtual Environment</h3>
-<p>Create a virtual environment with this command:</p>
-<pre><code>python3 -m venv venv</code></pre>
-<p>Activate the environment with:</p>
-<pre><code>source venv/bin/activate</code></pre>
-<p>To deactivate:</p>
-<pre><code>deactivate</code></pre>
+Parse the PDF page one line at a time.
+Detect headers at the start of lines and associate subsequent lines as their content.
+Handle multi-line entries for each header effectively.
 
-<h3>6. Using ChatGPT for Development</h3>
-<p>I used different versions of ChatGPT during development (initially 01-mini, later 03-mini or 03-mini-high).</p>
+Parse each page on its own row with following column headers and corresponding content:
 
-<p>I usually start with short program description prompts, but in this case, one long prompt worked best since my goals were well-defined.</p>
+SHEET #
+SCENE #
+I/E
+SET
+SHOOTING LOCATION
+D/N
+PAGES
+SHOOTING DATE
+SHOOTING DAY
+SYNOPSIS
+UNIT
+CAST
+EXTRAS
+VEHICLES
+ANIMALS
+STUNTS
+CAMERA, LIGHT, GRIP
+PROPS
+SFX
+VFX
+ADDITIONAL LABOUR
 
-<p>My first prompt to ChatGPT was:</p>
-<pre><code>Hi! Can you give a Python code that reads a PDF file and then parses it into an Excel file...</code></pre>
+There should be GUI for selecting the pdf file.
 
-<h3>7. Project Folder Structure and Files</h3>
-<pre><code>
-mms_report_parser/
-├── venv/
-├── requirements.txt
-├── main.py
+Format the sheet in the following way:
+1. All borders, no text wrap.
+2. First row bold.
+3. Apply auto-width to columns ranging from "SHEET #" to "UNIT" in the Excel output. The columns CAST forward can be default size.
+4. Column headered PAGES should be formatted as fractions, as eights. Note that there are also full pages such as 1 2/8 etc.
+5. Column headered SHOOTING DATE should be formatted as date DD.MM.YYYY. The current format now is “Jul 16, 2028” for 16.07.2018. Current format for the months now are Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec.
+6. Columns headered SHOOTING DAY and SHEET # should be formatted as number.
+7. There should be a simple terminal log for following what the app is doing. Log parsing and data entry to excel.
+
+Think it over first. Use simple modular structure. No code needed yet. I am using macOS. Thank you!
+</div></code></pre>
+<p><strong>Notes on the prompt:</strong></p>
+<p><em>There should be GUI...</em>, it would have been advisable to mention that the GUI is built using the Tkinter library, since the library GPT chose had become paid.</p>
+<p><em>Point 4.</em>, the formatting of page numbers did not work in the program's first version.</p>
+<p><em>Point 6.</em>, that is, in importing the SHEET # columns into Excel, an extra ":" character was included.</p>
+<p><em>Point 7.</em>, the log is a file where you can see what went wrong if the program does not work properly.</p>
+<p><em>Think it over first...</em>, I always ask GPT to think things through before giving code, because otherwise it might produce a lot of code that could be changed in the middle of the response, and it becomes difficult to keep track of what the final working code is. I request a modular structure because if the code becomes one long file, GPT may no longer be willing to rewrite it entirely. Moreover, it is more efficient to make changes and additions module by module.</p>
+<p><strong>Second prompt</strong></p>
+<ol>
+<li>I quickly skimmed through the response and did not notice anything particularly noteworthy to comment on, although at this stage I should have noticed that GPT was considering a different library than Tkinter for the GUI.</li>
+</ol>
+<pre class="hljs"><code><div>Thank you! I am using Python 3.12 and I will make a virtual environment using that version. I will make a github setup later. Do not give me README file or .gitignore yet.
+
+Please give me terminal commands for creating nessecary files (requirements.txt etc.) and folders. The name of the project is mms_report_parser.
+
+Please think it over first and give me the neccesary code in the end. Avoid over-splitting the code into too many tiny modules but also avoid writing overly long code. Maintain readability and simplicity over unnecessary complexity. Thank you! 
+</div></code></pre>
+<p><strong>Notes on the prompt:</strong></p>
+<p><em>Do not give me README...</em>, GPT often offers version control. Here, I wanted to avoid things related to that, as I do not need them yet.</p>
+<p><em>Please give me terminal...</em>, in the Terminal program you can quickly and easily create all the necessary folders as well as the .txt and .py files. The files are empty, but they are named correctly. Then all you have to do is open them and paste the code copied from GPT.</p>
+<p><em>Please think it over first...</em>, here too I ask to think it through before writing the code. When the code is given at the end, it is easy to find, copy, and paste into the correct files.</p>
+<p>I will not include the answer here because it is long. A link to the entire conversation can be found at the bottom of the site.</p>
+<p><strong>7. Project Directory Structure and Files</strong></p>
+<p>In the response, GPT suggested the following directory structure:</p>
+<pre class="hljs"><code><div>mms_report_parser/
+├── venv/                   <span class="hljs-comment"># Virtual Environment</span>
+├── requirements.txt        <span class="hljs-comment"># List of Python libraries</span>
+├── main.py                 <span class="hljs-comment"># Program Entry Point</span>
 ├── modules/
-│   ├── gui.py
-│   ├── pdf_parser.py
-│   ├── data_processor.py
-│   ├── excel_writer.py
-│   └── logger_setup.py
+│   ├── gui.py              <span class="hljs-comment"># Graphical User Interface</span>
+│   ├── pdf_parser.py       <span class="hljs-comment"># Parsing of the PDF</span>
+│   ├── data_processor.py   <span class="hljs-comment"># Data Processing</span>
+│   ├── excel_writer.py     <span class="hljs-comment"># Writing and Formatting the Excel file</span>
+│   └── logger_setup.py     <span class="hljs-comment"># Logging Configuration</span>
 └── logs/
-    └── app.log
-</code></pre>
-
-<h3>8. Creating Project Files Using Terminal</h3>
-<pre><code>
-touch requirements.txt
-mkdir modules
+    └── app.log              <span class="hljs-comment"># Log File</span>
+</div></code></pre>
+<p><strong>8. Initializing the Project and Creating Files in the Terminal</strong></p>
+<p>Once you have navigated to the project folder and activated the virtual environment, create the necessary files and directories by following these instructions.</p>
+<p>Create the requirements.txt file:</p>
+<pre class="hljs"><code><div>touch requirements.txt
+</div></code></pre>
+<p>Open requirements.txt in a text editor and add references to the necessary libraries:</p>
+<pre class="hljs"><code><div>Pdfplumber
+Openpyxl
+</div></code></pre>
+<p><strong>What are libraries?</strong></p>
+<p>Programming libraries are collections of pre-written code that provide specific functionalities. In Python, libraries are typically installed using the pip command, and they simplify application development by eliminating the need to implement the same functionalities from scratch. For example, the pdfplumber library includes tools for reading PDF files and openpyxl for handling Excel files.</p>
+<p>Install the libraries by entering the following command in the terminal. Make sure you are in the virtual environment before running the command:</p>
+<pre class="hljs"><code><div>pip install -r requirements.txt
+</div></code></pre>
+<p>Create the directory structure and Python files by entering the following commands:</p>
+<pre class="hljs"><code><div>mkdir modules
 mkdir logs
 touch main.py
 touch modules/gui.py
@@ -71,49 +515,75 @@ touch modules/data_processor.py
 touch modules/excel_writer.py
 touch modules/logger_setup.py
 touch logs/app.log
-</code></pre>
+</div></code></pre>
+<p><strong>9. Writing the Code</strong></p>
+<p>At the end of the response, I received the code for each .py file. I copied and pasted them into the corresponding .py files in Visual Studio Code.</p>
+<p>For example, a copy of the following code from GPT's response</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># modules/pdf_parser.py</span>
 
-<h3>9. Writing the Code</h3>
-<p>Example of the PDF parser code:</p>
-<pre><code>import pdfplumber
+<span class="hljs-keyword">import</span> pdfplumber
 
-def parse_pdf(pdf_path, logger):
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">parse_pdf</span><span class="hljs-params">(pdf_path, logger)</span>:</span>
     parsed_pages = []
 
-    try:
-        with pdfplumber.open(pdf_path) as pdf:
-            for page_num, page in enumerate(pdf.pages, start=1):
+    <span class="hljs-keyword">try</span>:
+        <span class="hljs-keyword">with</span> pdfplumber.open(pdf_path) <span class="hljs-keyword">as</span> pdf:
+            <span class="hljs-keyword">for</span> page_num, page <span class="hljs-keyword">in</span> enumerate(pdf.pages, start=<span class="hljs-number">1</span>):
                 text = page.extract_text()
-                if text:
-                    lines = text.split('\n')
+                <span class="hljs-keyword">if</span> text:
+                    lines = text.split(<span class="hljs-string">'\n'</span>)
                     parsed_pages.append({
-                        'page_number': page_num,
-                        'lines': lines
+                        <span class="hljs-string">'page_number'</span>: page_num,
+                        <span class="hljs-string">'lines'</span>: lines
                     })
-                    logger.info(f"Parsed page {page_num}.")
-                else:
-                    logger.warning(f"No text found on page {page_num}.")
-    except Exception as e:
-        logger.error(f"Failed to parse PDF: {e}")
-        return None
+                    logger.info(<span class="hljs-string">f"Parsed page <span class="hljs-subst">{page_num}</span>."</span>)
+                <span class="hljs-keyword">else</span>:
+                    logger.warning(<span class="hljs-string">f"No text found on page <span class="hljs-subst">{page_num}</span>."</span>)
+    <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:
+        logger.error(<span class="hljs-string">f"Failed to parse PDF: <span class="hljs-subst">{e}</span>"</span>)
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span>
 
-    return parsed_pages</code></pre>
-
-<h3>10. Running the Program</h3>
-<pre><code>python main.py</code></pre>
-
-<h3>11. Final Notes</h3>
-<p>All key issues like page formatting and SHEET # column errors were resolved. Users can now choose the save location and filename for the resulting Excel file.</p>
-
-<h3>Links</h3>
+    <span class="hljs-keyword">return</span> parsed_pages
+</div></code></pre>
+<p>I opened the <em>pdf_parser.py</em> file in Visual Studio Code, pasted the code there, and saved the file.</p>
+<p><strong>Running the Program:</strong></p>
+<p>Once all the code has been transferred to the files and saved, I tested the program by running the following command in the Terminal:</p>
+<pre class="hljs"><code><div>python main.py
+</div></code></pre>
+<p><strong>10. Changes to the Code</strong></p>
+<p>The program worked almost as expected. However, I noticed some errors that I began to fix with new prompts:</p>
+<pre class="hljs"><code><div>Thank you! Two things. 1. Can we use tkinter for gui? 2. The pages were not converted to numbers as eights. Can we check that? Think it over first. Keep simple modular structure. No code needed yet. Thank you!
+</div></code></pre>
+<p>After the prompt, GPT provided a plan, after which I prompted:</p>
+<pre class="hljs"><code><div>Thanks! Let's do these. Think it over first and then give me to compelte code for nessecary .py files. Do not change anything else but what we discussed.
+</div></code></pre>
+<p><strong>Notes on the prompt:</strong>
+<em>Do not change anything...</em>, this is good to use, because sometimes GPT tends to change the program in odd ways on its own.</p>
+<pre class="hljs"><code><div>Great! Thank you! Now the PAGES are numbers. However the excel cells are not formatted as eights. Could we fix that? I imagine it is simple change. Can you think it over first. No code needed. Thank you!&quot;
+</div></code></pre>
+<p>In GPT's response, I received corrected code immediately, even though I said that I did not need the code yet. However, the provided code was good and the data was transferred correctly to the Excel file.</p>
+<p>The second prompt concerned the issue with the SHEET # column, where the separator character ":" was carried over into the file along with the sheet number.</p>
+<pre class="hljs"><code><div>Great! Thank you! I made the change. Please remember that. There is a slight issue with the SHEET #. When it is parsed it takes with it the separator ":" . For instance SHEET #: 8 is written as ": 8" in excel, when the correct would be "8". Could we fix that also. Think about it first. No code needed yt.
+</div></code></pre>
+<p>In the prompt, I asked to remember the previously made change in the code, because if GPT rewrites the code, it might revert to the old version where the eighth fractions do not work.</p>
+<p>In GPT's response, I immediately received corrected code, even though I said I did not need the code yet. The provided code was good and the data was correctly transferred to the Excel file.</p>
+<p>Finally, I asked to add a feature that allows the user to choose where and under what name the Excel file is saved.</p>
+<pre class="hljs"><code><div>Thank you! Can we add a feature where we can determine where we save the excel file and how to name it? Think it over first. No code needed yet.
+</div></code></pre>
+<p>After GPT's response, I prompted:</p>
+<pre class="hljs"><code><div>Yes, we can do this. Let’s keep the modular structure. Do not add or change anything else. Think it over first and then give me the complete code for all the .py files that needs to be changed. Thank you!
+</div></code></pre>
+<p>The code written by GPT worked and the program was now ready in these respects.</p>
+<p><strong>Links and Disclaimer:</strong></p>
+<p>This documentation and example code are provided "as is", without any warranties. I am not responsible for any errors or issues that may arise from the use or modification of the code. The user of the code is responsible for the functioning of the application and any modifications made.</p>
 <ul>
-<li><a href="https://chatgpt.com/share/67b1b90f-b244-800f-a1ef-330f1df8d384">Original ChatGPT Conversation</a></li>
-<li><a href="https://joonaskaup.github.io/mms_report_parser/The_Ancient.msd">Sample MMS File</a></li>
-<li><a href="https://joonaskaup.github.io/mms_report_parser/The_Ancient_mms_parser_layout_v2_report.pdf">PDF Report Sample</a></li>
-<li><a href="https://joonaskaup.github.io/mms_report_parser/Report_parser_layout_v2.msr">Report Layout File</a></li>
-<li><a href="https://joonaskaup.github.io/mms_report_parser/MMS_Report.xlsx">Excel Output File</a></li>
-<li><a href="https://www.myqnapcloud.com/smartshare/681j44ilnp2m26103694172a_6clRtX5">MMS Report Parser Program</a></li>
+<li><a href="https://chatgpt.com/share/67b1b90f-b244-800f-a1ef-330f1df8d384">Original ChatGPT conversation</a></li>
+<li><a href="https://joonaskaup.github.io/mms_report_parser/The_Ancient.msd">Movie Magic Scheduling file</a></li>
+<li><a href="https://joonaskaup.github.io/mms_report_parser/The_Ancient_mms_parser_layout_v2_report.pdf">PDF report</a></li>
+<li><a href="https://joonaskaup.github.io/mms_report_parser/Report_parser_layout_v2.msr">Report layout</a></li>
+<li><a href="https://joonaskaup.github.io/mms_report_parser/MMS_Report.xlsx">Excel file</a></li>
+<li><a href="https://www.myqnapcloud.com/smartshare/681j44ilnp2m26103694172a_6clRtX5">MMS Report Parser program</a> (the program should work by double-clicking the file. It prompts you to select a PDF file, converts it into Excel format, asks you to name it, and tells you where to save it.</li>
 </ul>
+
 </body>
 </html>
-
