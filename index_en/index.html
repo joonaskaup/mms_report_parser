@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MMS Report Parser - Development Process</title>
+<meta charset="UTF-8">
+</head>
+<body>
+<h2>MMS Report Parser - Software Development Process</h2>
+<p>This documentation outlines the step-by-step development process of the MMS Report Parser software. The program is designed to read PDF reports generated from the Movie Magic Scheduling software, parse their content, and save the data into an Excel spreadsheet.</p>
+
+<h3>1. Programming Language</h3>
+<p>The program is written in Python, specifically version 3.12. The newer 3.13 version had GUI-related issues.</p>
+<p>Python download link: <a href="https://www.python.org/downloads/release/python-3128/">Download Python 3.12</a></p>
+
+<h3>2. Code Editor</h3>
+<p>I used Visual Studio Code for coding. Download it here: <a href="https://code.visualstudio.com">Download VS Code</a></p>
+
+<h3>3. Terminal Application (Command Line Tool)</h3>
+<p>For building and running the program, I used the Terminal application on macOS. The Terminal app is located at:</p>
+<p><strong>Applications → Utilities → Terminal</strong></p>
+
+<h3>4. Creating a Project Directory</h3>
+<p>Navigate to your desired location and run the command:</p>
+<pre><code>cd ~/Documents/mms_report_parser</code></pre>
+
+<h3>5. Creating a Virtual Environment</h3>
+<p>Create a virtual environment with this command:</p>
+<pre><code>python3 -m venv venv</code></pre>
+<p>Activate the environment with:</p>
+<pre><code>source venv/bin/activate</code></pre>
+<p>To deactivate:</p>
+<pre><code>deactivate</code></pre>
+
+<h3>6. Using ChatGPT for Development</h3>
+<p>My first prompt to ChatGPT was:</p>
+<pre><code>Hi! Can you give a Python code that reads a PDF file and then parses it into an Excel file...</code></pre>
+
+<h3>7. Project Folder Structure and Files</h3>
+<pre><code>
+mms_report_parser/
+├── venv/
+├── requirements.txt
+├── main.py
+├── modules/
+│   ├── gui.py
+│   ├── pdf_parser.py
+│   ├── data_processor.py
+│   ├── excel_writer.py
+│   └── logger_setup.py
+└── logs/
+    └── app.log
+</code></pre>
+
+<h3>8. Creating Project Files Using Terminal</h3>
+<pre><code>
+touch requirements.txt
+mkdir modules
+mkdir logs
+touch main.py
+touch modules/gui.py
+touch modules/pdf_parser.py
+touch modules/data_processor.py
+touch modules/excel_writer.py
+touch modules/logger_setup.py
+touch logs/app.log
+</code></pre>
+
+<h3>9. Writing the Code</h3>
+<p>Example of the PDF parser code:</p>
+<pre><code>import pdfplumber
+
+def parse_pdf(pdf_path, logger):
+    parsed_pages = []
+
+    try:
+        with pdfplumber.open(pdf_path) as pdf:
+            for page_num, page in enumerate(pdf.pages, start=1):
+                text = page.extract_text()
+                if text:
+                    lines = text.split('\n')
+                    parsed_pages.append({
+                        'page_number': page_num,
+                        'lines': lines
+                    })
+                    logger.info(f"Parsed page {page_num}.")
+                else:
+                    logger.warning(f"No text found on page {page_num}.")
+    except Exception as e:
+        logger.error(f"Failed to parse PDF: {e}")
+        return None
+
+    return parsed_pages</code></pre>
+
+<h3>10. Running the Program</h3>
+<pre><code>python main.py</code></pre>
+
+<h3>11. Final Notes</h3>
+<p>All key issues like page formatting and SHEET # column errors were resolved. Users can now choose the save location and filename for the resulting Excel file.</p>
+
+<h3>Links</h3>
+<ul>
+<li><a href="https://chatgpt.com/share/67b1b90f-b244-800f-a1ef-330f1df8d384">Original ChatGPT Conversation</a></li>
+<li><a href="https://joonaskaup.github.io/mms_report_parser/The_Ancient.msd">Sample MMS File</a></li>
+<li><a href="https://joonaskaup.github.io/mms_report_parser/The_Ancient_mms_parser_layout_v2_report.pdf">PDF Report Sample</a></li>
+<li><a href="https://joonaskaup.github.io/mms_report_parser/Report_parser_layout_v2.msr">Report Layout File</a></li>
+<li><a href="https://joonaskaup.github.io/mms_report_parser/MMS_Report.xlsx">Excel Output File</a></li>
+<li><a href="https://www.myqnapcloud.com/smartshare/681j44ilnp2m26103694172a_6clRtX5">MMS Report Parser Program</a></li>
+</ul>
+</body>
+</html>
