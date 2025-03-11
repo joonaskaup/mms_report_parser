@@ -8,6 +8,10 @@
 <h2>MMS Report Parser - Software Development Process</h2>
 <p>This documentation outlines the step-by-step development process of the MMS Report Parser software. The program is designed to read PDF reports generated from the Movie Magic Scheduling software, parse their content, and save the data into an Excel spreadsheet.</p>
 
+<p>PDF reports contain information about each scene in the script. Each scene is presented on a separate page and includes details such as the scene number, filming date, brief scene description, characters present, extras, vehicles, etc. The MMS Report Parser reads all the pages of the report and generates an Excel table where each page is a row, and each detail is in its own column.</p>
+
+<p>The program was built using Python, with the help of ChatGPT for code generation and iteration. This documentation covers the tools used and the complete process from setting up the virtual environment and handling PDF data to formatting the final Excel file and testing the program. If you wish to build a similar tool or further develop this one, this documentation can be helpful.</p>
+
 <h3>1. Programming Language</h3>
 <p>The program is written in Python, specifically version 3.12. The newer 3.13 version had GUI-related issues.</p>
 <p>Python download link: <a href="https://www.python.org/downloads/release/python-3128/">Download Python 3.12</a></p>
@@ -32,6 +36,10 @@
 <pre><code>deactivate</code></pre>
 
 <h3>6. Using ChatGPT for Development</h3>
+<p>I used different versions of ChatGPT during development (initially 01-mini, later 03-mini or 03-mini-high).</p>
+
+<p>I usually start with short program description prompts, but in this case, one long prompt worked best since my goals were well-defined.</p>
+
 <p>My first prompt to ChatGPT was:</p>
 <pre><code>Hi! Can you give a Python code that reads a PDF file and then parses it into an Excel file...</code></pre>
 
@@ -108,3 +116,4 @@ def parse_pdf(pdf_path, logger):
 </ul>
 </body>
 </html>
+
